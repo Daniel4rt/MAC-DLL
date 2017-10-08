@@ -22,6 +22,8 @@ extern "C" {
  */
 int logclif_parse(int fd);
 
+static void logclif_auth_failed(struct login_session_data* sd, int result);//Oboro
+
 /**
  * Initialize the module.
  * Launched at login-serv start, create db or other long scope variable here.

@@ -750,6 +750,11 @@ int _vShowMessage(enum msg_type flag, const char *string, va_list ap)
 		case MSG_FATALERROR: //Bright Red (Fatal errors, abort(); if possible)
 			strcat(prefix,CL_RED"[Fatal Error]"CL_RESET":");
 			break;
+
+		case MSG_OBORO:
+			strcat(prefix,CL_MAGENTA"[OBORO]"CL_RESET":");
+			break;
+
 		default:
 			ShowError("In function _vShowMessage() -> Invalid flag passed.\n");
 			return 1;
@@ -876,3 +881,12 @@ void ShowFatalError(const char *string, ...) {
 	_vShowMessage(MSG_FATALERROR, string, ap);
 	va_end(ap);
 }
+
+void Oboro(const char *string, ...) 
+{
+	va_list ap;
+	va_start(ap, string);
+	_vShowMessage(MSG_OBORO, string, ap);
+	va_end(ap);
+}
+

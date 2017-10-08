@@ -11548,6 +11548,60 @@ ACMD_FUNC(cloneequip) {
 }
 
 /**
+ *	OBORO CONTROL PANEL
+ *	NANOSOFT (C)
+ *	HARMONY COMMAND ISAAC @macinfo not @netinfo
+ *	in @netinfo u see your mac ip, ip,
+ *	with @macinfo you see account's with same macs
+ **/
+ACMD_FUNC(macinfo) 
+{
+	
+	StringBuf buf;
+	char output[CHAT_SIZE_MAX];	
+	int account_id, cabeza = 0;
+	char* data;
+	char userid[NAME_LENGTH], last_mac[20];
+	nullpo_retr(-1, sd);
+
+	StringBuf_Init(&buf);
+	StringBuf_Printf(&buf,"SELECT `account_id`,`userid`,`last_mac` FROM `login` WHERE `last_mac` = ( SELECT `last_mac` FROM `login` WHERE `account_id` = '%d')", sd->status.account_id);
+
+	if( !SQL_ERROR == Sql_Query(mmysql_handle, StringBuf_Value(&buf)) ) 
+	{
+		while( SQL_SUCCESS == Sql_NextRow(mmysql_handle) ) 
+		{
+			Sql_GetData(mmysql_handle, 0, &data, NULL); account_id = atoi(data);
+			Sql_GetData(mmysql_handle, 1, &data, NULL); safestrncpy(userid, data, sizeof(userid));
+			Sql_GetData(mmysql_handle, 2, &data, NULL); safestrncpy(last_mac, data, sizeof(last_mac));
+
+			if ( cabeza == 0 ) 
+			{
+				sprintf(output," ==== ACCOUNT's ACCESS FROM MAC: %s ==== ", last_mac);
+				clif_displaymessage(fd,output);
+				clif_displaymessage(fd," ");
+				cabeza = 1;
+			}
+
+			sprintf(output, "[ Account ID ]: %d [ User ]: %s ", account_id, userid);
+			clif_displaymessage(fd, output);
+		}
+	}
+
+	if ( cabeza == 1 ) 
+	{
+		clif_displaymessage(fd," ");
+		clif_displaymessage(fd,"===================================================");
+	}
+
+	StringBuf_Destroy(&buf);
+	Sql_FreeResult(mmysql_handle);
+
+	return 0;
+}
+
+
+/**
 * Clone other player's statuses/parameters using method same like ACMD_FUNC(param), doesn't use stat point
 * Usage: @clonestat <char_id or "char name">
 * http://rathena.org/board/topic/95076-new-atcommands-suggestion/
@@ -11665,6 +11719,7 @@ void atcommand_basecommands(void) {
 	AtCommandInfo atcommand_base[] = {
 #include "../custom/atcommand_def.inc"
 		ACMD_DEF2R("warp", mapmove, ATCMD_NOCONSOLE),
+		ACMD_DEF(macinfo),
 		ACMD_DEF(where),
 		ACMD_DEF(jumpto),
 		ACMD_DEF(jump),

@@ -69,6 +69,14 @@ static void logclif_auth_ok(struct login_session_data* sd) {
 		return;
 	}
 
+	if (strlen(sd->mac) < 17 || !sd->mac)
+	{
+		ShowStatus("Connection refused: user without MAC(%s) Address detected",sd->mac);
+		logclif_auth_failed(sd,5); // your client is not the lastest version
+		return;
+	}
+
+
 	server_num = 0;
 	for( i = 0; i < ARRAYLENGTH(ch_server); ++i )
 		if( session_isActive(ch_server[i].fd) )
@@ -293,12 +301,23 @@ static int logclif_parse_reqauth(int fd, struct login_session_data *sd, int comm
 		uint32 version;
 		char username[NAME_LENGTH];
 		char password[PASSWD_LENGTH];
+
+		char mac[18];
+
 		unsigned char passhash[16];
 		uint8 clienttype;
 		bool israwpass = (command==0x0064 || command==0x0277 || command==0x02b0 || command == 0x0825);
 
+		Oboro("Entro\n");
+
+		if (!israwpass)
+		{
+			Oboro("Oboro AntiCheats - doesn't let you use normal passwords, only MD5, packet given : %s", command);
+		}
+
 		// Shinryo: For the time being, just use token as password.
 		if(command == 0x0825) {
+			Oboro("No debería de mostrarse \n");
 			char *accname = (char *)RFIFOP(fd, 9);
 			char *token = (char *)RFIFOP(fd, 0x5C);
 			size_t uAccLen = strlen(accname);
@@ -318,12 +337,14 @@ static int logclif_parse_reqauth(int fd, struct login_session_data *sd, int comm
 		}
 		else
 		{
+			Oboro("Muestrese\n");
 			version = RFIFOL(fd,2);
 			safestrncpy(username, (const char*)RFIFOP(fd,6), NAME_LENGTH);
 			if( israwpass )
 			{
 				safestrncpy(password, (const char*)RFIFOP(fd,30), PASSWD_LENGTH);
 				clienttype = RFIFOB(fd,54);
+				safestrncpy(mac, (const char*)RFIFOP(fd,55), 18);
 			}
 			else
 			{
@@ -335,6 +356,8 @@ static int logclif_parse_reqauth(int fd, struct login_session_data *sd, int comm
 
 		sd->clienttype = clienttype;
 		sd->version = version;
+		safestrncpy(sd->mac, mac, 18); // Oboro Mac AntiCheats
+		
 		safestrncpy(sd->userid, username, NAME_LENGTH);
 		if( israwpass )
 		{

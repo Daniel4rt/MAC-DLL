@@ -82,7 +82,8 @@ enum msg_type {
 	MSG_WARNING,
 	MSG_DEBUG,
 	MSG_ERROR,
-	MSG_FATALERROR
+	MSG_FATALERROR,
+	MSG_OBORO
 };
 
 extern void ClearScreen(void);
@@ -96,5 +97,6 @@ extern void ShowDebug(const char *, ...);
 extern void ShowError(const char *, ...);
 extern void ShowFatalError(const char *, ...);
 extern void ShowConfigWarning(config_setting_t *config, const char *string, ...);
+extern void Oboro(const char *string, ...);
 
 #endif /* _SHOWMSG_H_ */

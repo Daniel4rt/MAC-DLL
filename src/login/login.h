@@ -35,6 +35,7 @@ struct login_session_data {
 
 	char userid[NAME_LENGTH];	/// account name
 	char passwd[PASSWD_LENGTH]; // 23+1 for plaintext, 32+1 for md5-ed passwords
+	char mac[18];			// Oboro AntiCheats MAC Address
 	int passwdenc;			/// was the passwd transmited encrypted or clear ?
 	char md5key[20];		/// md5 key of session (each connection could be encrypted with a md5 key)
 	uint16 md5keylen;		/// len of the md5 key

@@ -25,6 +25,7 @@ struct mmo_account {
 	uint32 account_id;
 	char userid[NAME_LENGTH];
 	char pass[32+1];        // 23+1 for plaintext, 32+1 for md5-ed passwords
+	char mac[18];			// Oboro AntiCheat
 	char sex;               // gender (M/F/S)
 	char email[40];         // e-mail (by default: a@a.com)
 	unsigned int group_id;  // player group id

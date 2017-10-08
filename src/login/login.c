@@ -386,7 +386,9 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 		}
 	}
 
-	ShowNotice("Authentication accepted (account: %s, id: %d, ip: %s)\n", sd->userid, acc.account_id, ip);
+	//ShowNotice("Authentication accepted (account: %s, id: %d, ip: %s)\n", sd->userid, acc.account_id, ip);
+	Oboro("\nAccepted [\n	account	=> %s,\n	id	=> %d,\n	ip	=> %s\n	mac	=> %s,\n	hwid	=> NULL,\n	CheckSum=> NULL\n];\n", sd->userid, acc.account_id, ip, (strlen(sd->mac) > 0 ? sd->mac : "NULL"));
+
 
 	// update session data
 	sd->account_id = acc.account_id;
@@ -395,6 +397,8 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 	safestrncpy(sd->lastlogin, acc.lastlogin, sizeof(sd->lastlogin));
 	sd->sex = acc.sex;
 	sd->group_id = acc.group_id;
+
+	safestrncpy(acc.mac, sd->mac, sizeof(acc.mac));//Oboro NoCheats MAC
 
 	// update account data
 	timestamp2string(acc.lastlogin, sizeof(acc.lastlogin), time(NULL), "%Y-%m-%d %H:%M:%S");

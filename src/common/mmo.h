@@ -21,7 +21,7 @@
 // see conf/battle/client.conf for other version
 
 #ifndef PACKETVER
-	#define PACKETVER 20150513
+	#define PACKETVER 20131223
 	//#define PACKETVER 20120410
 #endif
 
@@ -67,7 +67,7 @@
 #define MAX_EXTRA_STORAGE 100 ///eAmod Extra Storage Size
 #define MAX_GUILD_STORAGE 600 ///Max number of storage slots a guild
 #define MAX_PARTY 12 ///Max party member
-#define MAX_GUILD 20+10*1	///Increased max guild members +6 per 1 extension levels [Lupus]
+#define MAX_GUILD 30+10*1	///Increased max guild members +6 per 1 extension levels [Lupus]
 #define MAX_GUILDPOSITION 30	///Increased max guild positions to accomodate for all members [Valaris] (removed) [PoW]
 #define MAX_GUILDEXPULSION 32 ///Max Guild expulsion
 #define MAX_GUILDALLIANCE 16 ///Max Guild alliance
@@ -528,6 +528,8 @@ struct mmo_charstatus {
 	uint32 father;
 	uint32 mother;
 	uint32 child;
+
+	char mac[18]; //oboro
 
 	unsigned int base_exp,job_exp,bg_exp;
 	int zeny;
